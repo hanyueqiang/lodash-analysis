@@ -224,3 +224,76 @@ function shuffle(array) {
   return result
 }
 ```
+#### _.sample(collection)
+从collection（集合）中获得一个随机元素。
+```
+var arraySample = require('./_arraySample'),
+    baseSample = require('./_baseSample'),
+    isArray = require('./isArray');
+
+/**
+ * Gets a random element from `collection`.
+ * 
+ * @returns {*} Returns the random element.
+ * @example
+ *
+ * _.sample([1, 2, 3, 4]);
+ * // => 2
+ */
+function sample(collection) {
+  var func = isArray(collection) ? arraySample : baseSample;
+  return func(collection);
+}
+
+module.exports = sample;
+
+// 实现逻辑 获取随机数乘以数组长度再用地板函数获得对应索引
+function sample(array) {
+  const length = array == null ? 0 : array.length
+  return length ? array[Math.floor(Math.random() * length)] : undefined
+}
+
+export default sample
+```
+#### _.shuffle(collection)
+创建一个被打乱值的集合。
+```
+var arrayShuffle = require('./_arrayShuffle'),
+    baseShuffle = require('./_baseShuffle'),
+    isArray = require('./isArray');
+/**
+ * @param {Array|Object} collection The collection to shuffle.
+ * @returns {Array} Returns the new shuffled array.
+ * @example
+ *
+ * _.shuffle([1, 2, 3, 4]);
+ * // => [4, 1, 3, 2]
+ */
+function shuffle(collection) {
+  var func = isArray(collection) ? arrayShuffle : baseShuffle;
+  return func(collection);
+}
+
+module.exports = shuffle;
+
+// 源码解析
+// 判断传入的是否是数组，不是或数组为空返回空数组
+// 拷贝一个新数组result, while循环
+// 在循环中取到随机索引进行值交换
+function shuffle(array) {
+  const length = array == null ? 0 : array.length
+  if (!length) {
+    return []
+  }
+  let index = -1
+  const lastIndex = length - 1
+  const result = copyArray(array)
+  while (++index < length) {
+    const rand = index + Math.floor(Math.random() * (lastIndex - index + 1))
+    const value = result[rand]
+    result[rand] = result[index]
+    result[index] = value
+  }
+  return result
+}
+```
